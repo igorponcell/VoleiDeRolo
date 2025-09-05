@@ -43,7 +43,7 @@ const Register = () => {
                 name="username" 
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                placeholder='Enter your username'
+                placeholder='Insira seu usuário'
                 required/>
             </div>
             
@@ -55,7 +55,7 @@ const Register = () => {
                 name="email" 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder='Enter your email'
+                placeholder='insira seu email'
                 required/>
             </div>
             
@@ -67,7 +67,7 @@ const Register = () => {
                 name="password" 
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder='Enter your password'
+                placeholder='insira sua senha'
                 required/>
             </div>
         
@@ -79,7 +79,7 @@ const Register = () => {
                 name="confirmPassword"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder='Confirm your password'
+                placeholder='insira sua senha novamente'
                 required/>
             </div>
 
