@@ -1,5 +1,6 @@
 import styles from './Register.module.css';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
+
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -28,7 +29,7 @@ const Register = () => {
     // Reset form fields
     resetForm();
   };
-
+  
   return (
     <div className={styles.register}>
         <h1>Registar</h1>

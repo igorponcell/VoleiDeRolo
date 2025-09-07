@@ -12,6 +12,7 @@
 }
 
 .brand span {
+    color: #650691;
     font-weight: 900;
     text-transform: uppercase;
 }
@@ -30,6 +31,6 @@
 }
 
 .active {
-    background-color: #000;
+    background-color: #650691;
     color: #fff;
 }
