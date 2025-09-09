@@ -1,8 +1,6 @@
 import styles from './Register.module.css';
 import { useState, useEffect } from 'react';
 import { useAuthentication } from '../../hooks/useAuthentication.js';
-import { db } from '../../firebase/config.js';
-
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -10,14 +8,6 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
   const { error: authError, register, loading } = useAuthentication();
-
-  const resetForm = () => {
-    setUsername('');
-    setEmail('');
-    setPassword('');
-    setConfirmPassword('');
-    setError(null);
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -30,7 +20,7 @@ const Register = () => {
 
     // Here you would typically handle the registration logic, e.g., API call
     const user = { username, email, password };
-    const res = await register(user);
+    await register(user);
   };
 
   useEffect(() => {

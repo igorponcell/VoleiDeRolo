@@ -1,7 +1,6 @@
 import styles from './Login.module.css'
 import { useState, useEffect } from 'react';
 import { useAuthentication } from '../../hooks/useAuthentication.js';
-import { db } from '../../firebase/config.js';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -9,18 +8,12 @@ const Login = () => {
   const [error, setError] = useState(null);
   const { error: authError, loading, login } = useAuthentication();
 
-  const resetForm = () => {
-    setEmail('');
-    setPassword('');
-    setError(null);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
 
     const user = { email, password };
-    const res = await login(user);
+    await login(user);
   };
 
   useEffect(() => {
