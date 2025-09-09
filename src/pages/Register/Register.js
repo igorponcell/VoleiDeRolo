@@ -1,5 +1,7 @@
 import styles from './Register.module.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useAuthentication } from '../../hooks/useAuthentication.js';
+import { db } from '../../firebase/config.js';
 
 const Register = () => {
   const [username, setUsername] = useState('');
@@ -7,6 +9,7 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState(null);
+  const { error: authError, register, loading } = useAuthentication();
 
   const resetForm = () => {
     setUsername('');
@@ -16,78 +19,81 @@ const Register = () => {
     setError(null);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError(null);
+
     if (password !== confirmPassword) {
-      setError('Senhas não coincidem');
+      setError('Senhas não coincidem.');
       return;
     }
 
+    // Here you would typically handle the registration logic, e.g., API call
     const user = { username, email, password };
-    console.log('Usuario registrado:', user);
-    
-    // Reset form fields
-    resetForm();
+    const res = await register(user);
   };
-  
+
+  useEffect(() => {
+    if (authError) {
+      setError(authError);
+    }
+  }, [authError]);
+
   return (
     <div className={styles.register}>
-        <h1>Registar</h1>
+      <h1>Cadastro</h1>
 
         <form onSubmit={handleSubmit}>
-        
-            <div className="formGroup">
-            <label htmlFor="username">Usuário:</label>
-            <input 
-                type="text" 
-                id="username" 
-                name="username" 
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder='Insira seu usuário'
-                required/>
-            </div>
-            
-            <div className="formGroup">
-            <label htmlFor="email">Email:</label>
-            <input 
-                type="email" 
-                id="email" 
-                name="email" 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder='insira seu email'
-                required/>
-            </div>
-            
-            <div className="formGroup">
-            <label htmlFor="password">Senha:</label>
-            <input 
-                type="password" 
-                id="password" 
-                name="password" 
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder='insira sua senha'
-                required/>
-            </div>
-        
-            <div className="formGroup">
-            <label htmlFor="confirmPassword">Confirmar Senha:</label>
-            <input 
-                type="password" 
-                id="confirmPassword" 
-                name="confirmPassword"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                placeholder='insira sua senha novamente'
-                required/>
-            </div>
+          <div className="formGroup">
+          <label htmlFor="username">Usuário:</label>
+          <input 
+            type="text" 
+            id="username" 
+            name="username" 
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            placeholder='Insira seu usuário'
+            required/>
+        </div>
+        <div className="formGroup">
+          <label htmlFor="email">Email:</label>
+          <input 
+            type="email" 
+            id="email" 
+            name="email" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder='Insira seu email'
+            required/>
+        </div>
+        <div className="formGroup">
+          <label htmlFor="password">Senha:</label>
+          <input 
+            type="password" 
+            id="password" 
+            name="password" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder='Insira sua senha'
+            required/>
+        </div>
+        <div className="formGroup">
+          <label htmlFor="confirmPassword">Confirmação:</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder='Confirme sua senha'
+            required/>
+        </div>
 
-            <button type="submit" className='btn'>Registrar</button>
+        {!loading && <button type="submit" className='btn'>Cadastrar</button>}
+        {loading && <button type="submit" className='btn' disabled>Carregando...</button>}
 
-            {error && <p className="error">{error}</p>}
-        </form>
+        {error && <p className="error">{error}</p>}
+      </form>
     </div>  
   )
 }

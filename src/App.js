@@ -1,30 +1,56 @@
-import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { onAuthStateChanged } from 'firebase/auth';
+
+import { useState, useEffect } from 'react';
+import { useAuthentication } from './hooks/useAuthentication';
+
+
+// Importing components
 import NavBar from './components/NavBar/NavBar';
 import Footer from './components/Footer/Footer';
+
+// Importing pages
 import Home from './pages/Home/Home';
-import Register from './pages/Register/Register';
-import Login from './pages/Login/Login';
 import About from './pages/About/About';
+import Login from './pages/Login/Login';
+import Register from './pages/Register/Register';
+
+// Main App component 
 
 function App() {
+  const [user, setUser] = useState(undefined);
+  const { auth } = useAuthentication();
+
+  const loadingUser = user === undefined;
+
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      setUser(user);
+    });
+  }, [auth]);
+
+  if (loadingUser) {
+    return <p>Carregando...</p>;
+  }
+
   return (
     <div className="App">
-      <BrowserRouter>
-        <div className='container'>
-          <NavBar />
-          
-          <Routes>
-            <Route path='/' element={<Home/>} />
-            <Route path='/about' element={<About/>} />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/register' element={<Register/>} />
-          </Routes>
-
+      <AuthProvider value={{ user }}>
+        <BrowserRouter>
+        <NavBar />
+          <div className="container">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Routes>
+          </div>
           <Footer />
-        </div>
-      </BrowserRouter>
+        </BrowserRouter>
+      </AuthProvider>
     </div>
   );
 }
