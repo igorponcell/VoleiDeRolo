@@ -1,5 +1,5 @@
 import './App.css';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes , Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -44,8 +44,8 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+              <Route path="/login" element={!user ? <Login /> : <Navigate to="/"/>} />
+              <Route path="/register" element={!user ? <Register /> : <Navigate to="/"/>} />
             </Routes>
           </div>
           <Footer />
