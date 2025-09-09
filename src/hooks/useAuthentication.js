@@ -1,4 +1,5 @@
-import  { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+
+import  { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, updateProfile, signOut} from "firebase/auth";
 import { useState, useEffect, use } from "react";
 
 export const useAuthentication = () => {
@@ -13,6 +14,36 @@ export const useAuthentication = () => {
     function checkIfIsCancelled() {
         if (cancelled) {
             return;
+        }
+    }
+
+     //logout
+    const logout = () => {
+        checkIfIsCancelled();
+        return signOut(auth);
+    }
+
+     const login = async (data) => {
+        checkIfIsCancelled();
+        setLoading(true);
+        setError(null);
+
+        try {
+            await signInWithEmailAndPassword(auth, data.email, data.password);
+        } catch (error) {
+            let systemErrorMessage;
+
+            if (error.message.includes("user-not-found")) {
+                systemErrorMessage = "Usuário não encontrado.";
+            } else if (error.message.includes("wrong-password")) {
+                systemErrorMessage = "Senha incorreta.";
+            } else {
+                systemErrorMessage = "Ocorreu um erro, por favor tente mais tarde.";
+            }
+
+            setError(systemErrorMessage);
+        } finally {
+            setLoading(false);
         }
     }
     
@@ -54,5 +85,5 @@ export const useAuthentication = () => {
         return () => setCancelled(true);
     }, []);
 
-    return { error, loading, register, auth};
+    return { error, loading, auth, register, logout, login};
 }
